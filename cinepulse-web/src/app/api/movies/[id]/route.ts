@@ -1,9 +1,9 @@
-import { NextResponse } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 
 const TARGET = (process.env.API_PROXY_TARGET ?? "").replace(/\/+$/, "");
 const t = (p: string) => `${TARGET}${p}`;
 
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
+export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
   if (!TARGET) return NextResponse.json({ error: "API_PROXY_TARGET not set" }, { status: 500 });
 
   const body = await req.text();
@@ -22,7 +22,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
   }
 }
 
-export async function DELETE(_req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(_req: NextRequest, { params }: { params: { id: string } }) {
   if (!TARGET) return NextResponse.json({ error: "API_PROXY_TARGET not set" }, { status: 500 });
 
   const upstream = await fetch(t(`/api/movies/${params.id}`), {
