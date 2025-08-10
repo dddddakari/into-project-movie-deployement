@@ -4,18 +4,17 @@ applications:
       phases:
         preBuild:
           commands:
-            - cd cinepulse-web
             - npm ci
         build:
           commands:
             - npm run build
       artifacts:
-        baseDirectory: cinepulse-web/.next
+        baseDirectory: .next
         files:
           - '**/*'
       cache:
         paths:
-          - node_modules/**/* 
-          - cinepulse-web/node_modules/**/*
-          - cinepulse-web/.next/cache/**/*
-    appRoot: cinepulse-web
+          - node_modules/**/*
+          - .next/cache/**/*
+    appRoot: .
+
