@@ -1,28 +1,31 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 const TARGET = (process.env.API_PROXY_TARGET ?? "").replace(/\/+$/, "");
-
-function targetUrl(path: string) {
-  if (!TARGET) throw new Error("API_PROXY_TARGET is not set");
-  return `${TARGET}${path}`;
-}
+const t = (p: string) => `${TARGET}${p}`;
 
 export async function GET() {
-  const res = await fetch(targetUrl("/api/movies"), { cache: "no-store" });
-  return NextResponse.json(await res.json(), { status: res.status });
+  if (!TARGET) return NextResponse.json({ error: "API_PROXY_TARGET not set" }, { status: 500 });
+
+  const upstream = await fetch(t("/api/movies"), { cache: "no-store" });
+  const json = await upstream.json();
+  return NextResponse.json(json, { status: upstream.status });
 }
 
-export async function POST(req: NextRequest) {
+export async function POST(req: Request) {
+  if (!TARGET) return NextResponse.json({ error: "API_PROXY_TARGET not set" }, { status: 500 });
+
   const body = await req.text();
-  const res = await fetch(targetUrl("/api/movies"), {
+  const upstream = await fetch(t("/api/movies"), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body,
+    cache: "no-store",
   });
-  const text = await res.text();
+
+  const text = await upstream.text();
   try {
-    return NextResponse.json(JSON.parse(text), { status: res.status });
+    return NextResponse.json(JSON.parse(text), { status: upstream.status });
   } catch {
-    return new NextResponse(text, { status: res.status });
+    return new NextResponse(text, { status: upstream.status });
   }
 }

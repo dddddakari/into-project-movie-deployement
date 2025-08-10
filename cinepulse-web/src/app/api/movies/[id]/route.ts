@@ -1,29 +1,37 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 const TARGET = (process.env.API_PROXY_TARGET ?? "").replace(/\/+$/, "");
+const t = (p: string) => `${TARGET}${p}`;
 
-function targetUrl(path: string) {
-  if (!TARGET) throw new Error("API_PROXY_TARGET is not set");
-  return `${TARGET}${path}`;
-}
+type Ctx = { params: { id: string } };
 
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(req: Request, { params }: Ctx) {
+  if (!TARGET) return NextResponse.json({ error: "API_PROXY_TARGET not set" }, { status: 500 });
+
   const body = await req.text();
-  const res = await fetch(targetUrl(`/api/movies/${params.id}`), {
+  const upstream = await fetch(t(`/api/movies/${params.id}`), {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body,
+    cache: "no-store",
   });
-  const text = await res.text();
+
+  const text = await upstream.text();
   try {
-    return NextResponse.json(JSON.parse(text), { status: res.status });
+    return NextResponse.json(JSON.parse(text), { status: upstream.status });
   } catch {
-    return new NextResponse(text, { status: res.status });
+    return new NextResponse(text, { status: upstream.status });
   }
 }
 
-export async function DELETE(_: NextRequest, { params }: { params: { id: string } }) {
-  const res = await fetch(targetUrl(`/api/movies/${params.id}`), { method: "DELETE" });
-  // 204 has no body
-  return new NextResponse(null, { status: res.status || 204 });
+export async function DELETE(_req: Request, { params }: Ctx) {
+  if (!TARGET) return NextResponse.json({ error: "API_PROXY_TARGET not set" }, { status: 500 });
+
+  const upstream = await fetch(t(`/api/movies/${params.id}`), {
+    method: "DELETE",
+    cache: "no-store",
+  });
+
+  // 204 No Content is common; return empty body with the same status
+  return new NextResponse(null, { status: upstream.status || 204 });
 }
