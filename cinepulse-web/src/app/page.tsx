@@ -95,8 +95,8 @@ export default function Home() {
 
   async function onDelete(id: number) {
     try {
-      await deleteMovie(id);                 // calls /api/movies/:id (no JSON expected)
-      setMovies(prev => prev.filter(m => m.id !== id)); // update UI immediately
+      await deleteMovie(id);
+      setMovies(prev => prev.filter(m => m.id !== id));
     } catch (e) {
       console.error(e);
       alert('Delete failed');
@@ -104,30 +104,29 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-4 md:p-8">
+    <div className="min-h-screen bg-gradient-to-br from-yellow-200 via-yellow-300 to-orange-300 p-4 md:p-8 font-sans">
       <div className="mx-auto max-w-7xl">
         {/* Header */}
         <header className="mb-8 text-center">
           <div className="mb-4 flex items-center justify-center gap-3">
-            <Film className="h-8 w-8 text-blue-600" />
-            <h1 className="text-4xl font-bold text-gray-900">Movie Collection</h1>
+            <Film className="h-10 w-10 text-orange-800" />
+            <h1 className="text-5xl font-bold tracking-widest text-orange-900 uppercase">
+              Movie Collection
+            </h1>
           </div>
-          <p className="text-lg text-gray-600">
-            Backend: <code className="text-gray-800">{process.env.NEXT_PUBLIC_API_BASE ?? '/api (proxy)'}</code>
-          </p>
         </header>
 
         {/* Add Movie */}
-        <section className="mb-8 rounded-xl border border-slate-200/70 bg-white/80 p-6 shadow-sm backdrop-blur">
-          <h2 className="mb-1 flex items-center gap-2 text-xl font-semibold">
-            <Plus className="h-5 w-5" />
+        <section className="mb-8 rounded-xl border-4 border-yellow-500 bg-yellow-100 p-6 shadow-lg">
+          <h2 className="mb-1 flex items-center gap-2 text-2xl font-bold text-orange-900">
+            <Plus className="h-6 w-6" />
             Add New Movie
           </h2>
-          <p className="mb-4 text-sm text-gray-600">Add a new action movie to your collection</p>
+          <p className="mb-4 text-sm text-orange-800">Add a new action movie to your collection</p>
 
           <form onSubmit={onSubmit} className="grid grid-cols-1 gap-4 md:grid-cols-3">
             <div className="space-y-1">
-              <label htmlFor="title" className="text-sm font-medium text-gray-700">
+              <label htmlFor="title" className="text-sm font-medium text-orange-900">
                 Movie Title
               </label>
               <input
@@ -138,12 +137,12 @@ export default function Home() {
                 placeholder="Enter movie title"
                 value={form.title}
                 onChange={onChange}
-                className="w-full rounded-md border border-slate-300 px-3 py-2 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                className="w-full rounded-md border-2 border-yellow-500 px-3 py-2 outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-200"
               />
             </div>
 
             <div className="space-y-1">
-              <label htmlFor="releaseYear" className="text-sm font-medium text-gray-700">
+              <label htmlFor="releaseYear" className="text-sm font-medium text-orange-900">
                 Release Year
               </label>
               <input
@@ -156,12 +155,12 @@ export default function Home() {
                 placeholder="2024"
                 value={form.releaseYear}
                 onChange={onChange}
-                className="w-full rounded-md border border-slate-300 px-3 py-2 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                className="w-full rounded-md border-2 border-yellow-500 px-3 py-2 outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-200"
               />
             </div>
 
             <div className="space-y-1">
-              <label htmlFor="director" className="text-sm font-medium text-gray-700">
+              <label htmlFor="director" className="text-sm font-medium text-orange-900">
                 Director
               </label>
               <input
@@ -172,7 +171,7 @@ export default function Home() {
                 placeholder="Director name"
                 value={form.director}
                 onChange={onChange}
-                className="w-full rounded-md border border-slate-300 px-3 py-2 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                className="w-full rounded-md border-2 border-yellow-500 px-3 py-2 outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-200"
               />
             </div>
 
@@ -180,53 +179,53 @@ export default function Home() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-blue-600 px-4 py-2 font-medium text-white transition hover:bg-blue-700 disabled:opacity-60 md:w-auto"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-orange-600 px-4 py-2 font-bold text-white transition hover:bg-orange-700 disabled:opacity-60 md:w-auto"
               >
                 <Plus className="h-4 w-4" />
                 {isLoading ? 'Adding…' : 'Add Movie'}
               </button>
             </div>
           </form>
-          {error && <div className="mt-3 text-sm text-rose-600">{error}</div>}
+          {error && <div className="mt-3 text-sm text-red-700">{error}</div>}
         </section>
 
         {/* Movies */}
         {isLoading && movies.length === 0 ? (
           <div className="py-12 text-center">
-            <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2 border-blue-600" />
-            <p className="text-gray-600">Loading movies…</p>
+            <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-4 border-orange-600" />
+            <p className="text-orange-800">Loading movies…</p>
           </div>
         ) : movies.length === 0 ? (
-          <div className="rounded-xl border border-slate-200/70 bg-white/80 p-10 text-center shadow-sm backdrop-blur">
-            <Film className="mx-auto mb-4 h-16 w-16 text-gray-400" />
-            <h3 className="mb-2 text-xl font-semibold text-gray-700">No movies found</h3>
-            <p className="text-gray-500">Add your first movie to get started!</p>
+          <div className="rounded-xl border-4 border-yellow-500 bg-yellow-100 p-10 text-center shadow-md">
+            <Film className="mx-auto mb-4 h-16 w-16 text-orange-500" />
+            <h3 className="mb-2 text-xl font-semibold text-orange-900">No movies found</h3>
+            <p className="text-orange-700">Add your first movie to get started!</p>
           </div>
         ) : (
           <ul className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {movies.map((m) => (
               <li
                 key={m.id}
-                className="group rounded-xl border border-slate-200/70 bg-white/80 shadow-sm backdrop-blur transition hover:shadow-md"
+                className="group rounded-xl border-4 border-yellow-500 bg-yellow-50 shadow-md transition hover:shadow-xl"
               >
                 <div className="p-5">
-                  <div className="mb-1 line-clamp-2 text-lg font-bold text-gray-900">{m.title}</div>
-                  <div className="text-sm font-medium text-blue-600">{m.releaseYear}</div>
-                  <div className="mt-2 text-sm text-gray-600">
+                  <div className="mb-1 line-clamp-2 text-lg font-bold text-orange-900">{m.title}</div>
+                  <div className="text-sm font-medium text-orange-700">{m.releaseYear}</div>
+                  <div className="mt-2 text-sm text-orange-800">
                     <span className="font-medium">Director:</span> {m.director}
                   </div>
                 </div>
-                <div className="flex gap-2 border-t border-slate-200/70 p-3">
+                <div className="flex gap-2 border-t-4 border-yellow-500 p-3">
                   <button
                     onClick={() => openEdit(m)}
-                    className="flex flex-1 items-center justify-center gap-1 rounded-md border border-slate-300 px-3 py-1.5 text-sm transition hover:border-blue-300 hover:bg-blue-50"
+                    className="flex flex-1 items-center justify-center gap-1 rounded-full border-2 border-yellow-400 px-3 py-1.5 text-sm font-bold text-orange-800 transition hover:border-orange-500 hover:bg-orange-100"
                   >
                     <Edit3 className="h-4 w-4" />
                     Edit
                   </button>
                   <button
                     onClick={() => onDelete(m.id)}
-                    className="flex flex-1 items-center justify-center gap-1 rounded-md border border-slate-300 px-3 py-1.5 text-sm transition hover:border-rose-300 hover:bg-rose-50 hover:text-rose-600"
+                    className="flex flex-1 items-center justify-center gap-1 rounded-full border-2 border-red-400 px-3 py-1.5 text-sm font-bold text-red-700 transition hover:border-red-500 hover:bg-red-100"
                   >
                     <Trash2 className="h-4 w-4" />
                     Delete
@@ -237,23 +236,23 @@ export default function Home() {
           </ul>
         )}
 
-        {/* Edit “modal” (simple Tailwind overlay, no library) */}
+        {/* Edit Modal */}
         {showEdit && editing && (
           <div
             className="fixed inset-0 z-50 grid place-items-center bg-black/40 p-4"
             onClick={() => !isLoading && setShowEdit(false)}
           >
             <div
-              className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl"
+              className="w-full max-w-md rounded-xl border-4 border-yellow-500 bg-yellow-50 p-6 shadow-xl"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="mb-4 flex items-center gap-2">
-                <Edit3 className="h-5 w-5" />
-                <h3 className="text-lg font-semibold">Edit Movie</h3>
+                <Edit3 className="h-5 w-5 text-orange-800" />
+                <h3 className="text-lg font-bold text-orange-900">Edit Movie</h3>
               </div>
               <form onSubmit={onEditSubmit} className="space-y-4">
                 <div className="space-y-1">
-                  <label htmlFor="edit-title" className="text-sm font-medium text-gray-700">
+                  <label htmlFor="edit-title" className="text-sm font-medium text-orange-900">
                     Movie Title
                   </label>
                   <input
@@ -263,11 +262,11 @@ export default function Home() {
                     required
                     value={editing.title}
                     onChange={onEditChange}
-                    className="w-full rounded-md border border-slate-300 px-3 py-2 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                    className="w-full rounded-md border-2 border-yellow-500 px-3 py-2 outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-200"
                   />
                 </div>
                 <div className="space-y-1">
-                  <label htmlFor="edit-year" className="text-sm font-medium text-gray-700">
+                  <label htmlFor="edit-year" className="text-sm font-medium text-orange-900">
                     Release Year
                   </label>
                   <input
@@ -279,11 +278,11 @@ export default function Home() {
                     required
                     value={editing.releaseYear}
                     onChange={onEditChange}
-                    className="w-full rounded-md border border-slate-300 px-3 py-2 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                    className="w-full rounded-md border-2 border-yellow-500 px-3 py-2 outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-200"
                   />
                 </div>
                 <div className="space-y-1">
-                  <label htmlFor="edit-director" className="text-sm font-medium text-gray-700">
+                  <label htmlFor="edit-director" className="text-sm font-medium text-orange-900">
                     Director
                   </label>
                   <input
@@ -293,7 +292,7 @@ export default function Home() {
                     required
                     value={editing.director}
                     onChange={onEditChange}
-                    className="w-full rounded-md border border-slate-300 px-3 py-2 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                    className="w-full rounded-md border-2 border-yellow-500 px-3 py-2 outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-200"
                   />
                 </div>
 
@@ -301,14 +300,14 @@ export default function Home() {
                   <button
                     type="button"
                     onClick={() => setShowEdit(false)}
-                    className="inline-flex flex-1 items-center justify-center rounded-md border border-slate-300 px-4 py-2 text-sm transition hover:bg-slate-50"
+                    className="inline-flex flex-1 items-center justify-center rounded-full border-2 border-yellow-400 px-4 py-2 text-sm font-bold text-orange-800 transition hover:bg-orange-100"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={isLoading}
-                    className="inline-flex flex-1 items-center justify-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700 disabled:opacity-60"
+                    className="inline-flex flex-1 items-center justify-center rounded-full bg-orange-600 px-4 py-2 text-sm font-bold text-white transition hover:bg-orange-700 disabled:opacity-60"
                   >
                     {isLoading ? 'Saving…' : 'Save Changes'}
                   </button>

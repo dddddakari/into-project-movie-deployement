@@ -1,26 +1,29 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;700&display=swap'); /* retro playful font */
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #fff8dc; /* warm cream base */
+  --foreground: #4b3f28; /* brown text for 70s look */
+  --accent-yellow: #ffd54f; /* bright retro yellow */
+  --accent-orange: #ff9800;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: 'Baloo 2', sans-serif;
   --font-mono: var(--font-geist-mono);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #3a2e1f;
+    --foreground: #fff2cc;
   }
 }
 
 body {
-  background: var(--background);
+  background: linear-gradient(135deg, var(--accent-yellow) 0%, var(--accent-orange) 100%);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
 }
