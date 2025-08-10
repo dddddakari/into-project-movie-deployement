@@ -3,32 +3,31 @@ import { NextResponse, type NextRequest } from "next/server";
 const TARGET = (process.env.API_PROXY_TARGET ?? "").replace(/\/+$/, "");
 const t = (p: string) => `${TARGET}${p}`;
 
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
-  if (!TARGET) return NextResponse.json({ error: "API_PROXY_TARGET not set" }, { status: 500 });
+// PUT handler
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function PUT(req: NextRequest, ctx: any) {
+  // Force-cast ctx to the expected shape
+  const { id } = (ctx as { params: { id: string } }).params;
 
-  const body = await req.text();
-  const upstream = await fetch(t(`/api/movies/${params.id}`), {
+  const data = await req.json();
+  const res = await fetch(t(`/api/movies/${id}`), {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
-    body,
-    cache: "no-store",
+    body: JSON.stringify(data),
   });
 
-  const text = await upstream.text();
-  try {
-    return NextResponse.json(JSON.parse(text), { status: upstream.status });
-  } catch {
-    return new NextResponse(text, { status: upstream.status });
-  }
+  const result = await res.json();
+  return NextResponse.json(result, { status: res.status });
 }
 
-export async function DELETE(_req: NextRequest, { params }: { params: { id: string } }) {
-  if (!TARGET) return NextResponse.json({ error: "API_PROXY_TARGET not set" }, { status: 500 });
+// DELETE handler
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function DELETE(_req: NextRequest, ctx: any) {
+  const { id } = (ctx as { params: { id: string } }).params;
 
-  const upstream = await fetch(t(`/api/movies/${params.id}`), {
+  const res = await fetch(t(`/api/movies/${id}`), {
     method: "DELETE",
-    cache: "no-store",
   });
 
-  return new NextResponse(null, { status: upstream.status || 204 });
+  return NextResponse.json(await res.json(), { status: res.status });
 }
